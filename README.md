@@ -3,8 +3,6 @@ Test for DevOps Engineer candidates - Panoramic Power
 # Energy Monitoring System - Home Assignment
 
 
-# Energy Data Pipeline & Monitoring System
-
 A distributed energy monitoring system built with a Microservices architecture, featuring a real-time data pipeline, automated scaling, and a web dashboard.
 
 ## 🚀 Architecture Overview
