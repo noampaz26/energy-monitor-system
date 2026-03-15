@@ -13,5 +13,8 @@ COPY . .
 RUN chown -R worker_user:worker_user /home/worker_user
 USER worker_user
 
-EXPOSE 8000
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+# Note: Worker doesn't need EXPOSE 8000 because it doesn't listen to HTTP requests
+# It only connects OUT to Redis.
+
+# The correct command for the worker
+CMD ["python", "worker.py"]
