@@ -1,0 +1,18 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ .Release.Name }}-worker-scaler
+  labels:
+    assignment-id: {{ .Values.global.assignmentId | quote }}
+spec:
+  scaleTargetRef:
+    name: {{ .Release.Name }}-processing-worker
+  minReplicaCount: {{ .Values.processing.autoscaling.minReplicas }}
+  maxReplicaCount: {{ .Values.processing.autoscaling.maxReplicas }}
+  triggers:
+  - type: redis-streams
+    metadata:
+      stream: {{ .Values.redis.streamName | quote }}
+      consumerGroup: {{ .Values.redis.consumerGroup | quote }}
+      pendingEntriesCount: {{ .Values.processing.autoscaling.backlogThreshold | quote }}
+      address: "{{ .Values.redis.host }}:{{ .Values.redis.port }}"

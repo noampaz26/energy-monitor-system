@@ -1,0 +1,37 @@
+# Global settings used across all templates
+global:
+  # The UUID generated for the assignment
+  assignmentId: "bfcb02f8-5a3f-4611-ac4e-f42fc4c9f939"
+
+# Ingestion API Configuration
+ingestion:
+  name: ingestion-api
+  # The specific image for the API
+  image: "noampaz26/energy-pipeline:ingestion-latest"
+  replicaCount: 2
+  containerPort: 8000
+  service:
+    type: ClusterIP
+    port: 80
+
+# Processing Service (Worker) Configuration
+processing:
+  name: processing-worker
+  # The  imagethe Worker
+  image: "noampaz26/energy-pipeline:worker-latest"
+  containerPort: 8000 
+  
+  # KEDA Autoscaling Configuration 
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 10
+    # Scaling threshold based on pending messages in Redis Stream
+    backlogThreshold: "5"
+
+# Redis Connection Settings
+redis:
+  host: "redis-service"
+  port: 6379
+  streamName: "energy_readings"
+  consumerGroup: "processing_group"

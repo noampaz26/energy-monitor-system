@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-ingestion-api
+  labels:
+    app: ingestion
+    assignment-id: {{ .Values.global.assignmentId | quote }}
+spec:
+  replicas: {{ .Values.ingestion.replicaCount }}
+  selector:
+    matchLabels:
+      app: ingestion
+  template:
+    metadata:
+      labels:
+        app: ingestion
+        assignment-id: {{ .Values.global.assignmentId | quote }}
+    spec:
+      containers:
+        - name: api
+          image: {{ .Values.ingestion.image | quote }}
+          ports:
+            - containerPort: {{ .Values.ingestion.containerPort }}
+          env:
+            - name: REDIS_HOST
+              value: {{ .Values.redis.host | quote }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingestion-service
+spec:
+  selector:
+    app: ingestion
+  ports:
+    - protocol: TCP
+      port: {{ .Values.ingestion.service.port }}
+      targetPort: {{ .Values.ingestion.containerPort }}

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-processing-worker
+  labels:
+    app: processing
+    assignment-id: {{ .Values.global.assignmentId | quote }}
+spec:
+  selector:
+    matchLabels:
+      app: processing
+  template:
+    metadata:
+      labels:
+        app: processing
+        assignment-id: {{ .Values.global.assignmentId | quote }}
+    spec:
+      containers:
+        - name: worker
+          image: {{ .Values.processing.image | quote }}
+          env:
+            - name: REDIS_HOST
+              value: {{ .Values.redis.host | quote }}
