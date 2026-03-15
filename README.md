@@ -41,3 +41,13 @@ docker push noampaz26/energy-pipeline:ingestion-latest
 
 docker build -t noampaz26/energy-pipeline:worker-latest ./src/processing-service
 docker push noampaz26/energy-pipeline:worker-latest
+
+```
+
+
+
+### 2. Deploy to Kubernetes via Helm
+
+```bash
+helm install energy-app ./charts/energy-app
+```
