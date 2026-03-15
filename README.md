@@ -34,20 +34,20 @@ The system consists of the following components:
 ### Deployment
 1. **Clone the repository:**
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/noampaz26/energy-monitor-system.git
    cd energy-monitoring-system
 Deploy using Helm:
 
 Bash
-helm upgrade --install energy-app ./helm-chart
+.\helm.exe upgrade --install energy-app ./charts/energy-app
 Expose the services:
 Open two terminals and run:
 
 Bash
 # Terminal 1: API
-kubectl port-forward svc/energy-app-ingestion-api 8000:80
+kubectl port-forward service/ingestion-service 8000:80
 
 # Terminal 2: Frontend UI
-kubectl port-forward svc/energy-app-frontend-service 30080:80
+kubectl port-forward service/energy-app-frontend-service 30080:80
 Access the Dashboard:
 Open your browser at http://localhost:30080
