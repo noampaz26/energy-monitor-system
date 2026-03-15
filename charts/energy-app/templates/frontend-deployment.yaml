@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-frontend
+  labels:
+    app: frontend
+    assignment-id: {{ .Values.global.assignmentId | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+        assignment-id: {{ .Values.global.assignmentId | quote }}
+    spec:
+      containers:
+        - name: frontend
+          image: {{ .Values.frontend.image | quote }}
+          ports:
+            - containerPort: 80

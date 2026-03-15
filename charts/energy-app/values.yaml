@@ -45,3 +45,9 @@ redis:
   port: 6379
   streamName: "energy_readings"
   consumerGroup: "processing_group"
+
+# Frontend Configuration 
+frontend:
+  name: energy-frontend
+  image: "noampaz26/energy-frontend:v1" 
+  replicaCount: 1

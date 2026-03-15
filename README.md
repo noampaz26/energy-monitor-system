@@ -2,52 +2,52 @@
 Test for DevOps Engineer candidates - Panoramic Power
 # Energy Monitoring System - Home Assignment
 
-## Overview
-This project implements a scalable, microservices-based pipeline for ingesting and processing energy readings. The system is designed to handle high-throughput data using an event-driven architecture.
 
-## Architecture & Design Decisions
-The system is composed of two main services communicating through **Redis Streams**:
+# Energy Data Pipeline & Monitoring System
 
-1.  **Ingestion API (FastAPI)**:
-    - Responsible for receiving data from external sensors.
-    - Uses **Pydantic** for schema validation to ensure data integrity before it enters the pipeline.
-    - Handles requests asynchronously to maintain low latency.
+A distributed energy monitoring system built with a Microservices architecture, featuring a real-time data pipeline, automated scaling, and a web dashboard.
 
-2.  **Processing Service (Worker)**:
-    - Consumes data from Redis using **Consumer Groups** to ensure "at-least-once" delivery.
-    - Stores site-specific history for retrieval.
-    - Uses **Acknowledgements (XACK)** to confirm successful processing, preventing data loss.
-
-### Scaling Strategy (KEDA)
-Instead of scaling based on CPU or Memory, I implemented **KEDA (Kubernetes Event-driven Autoscaling)**. 
-- The system scales the Worker pods based on the **Redis Stream backlog** (`pendingEntriesCount`).
-- This ensures that the system reacts to data spikes in real-time without wasting resources during idle periods.
-
-### Security
-- **Non-root containers**: Following security best practices, all Docker images are configured to run with a non-root user.
-- **Resource Labeling**: All Kubernetes resources are labeled with the required assignment ID for tracking and management.
-
-## Project Structure
-- `src/ingestion-api/`: FastAPI application code and Dockerfile.
-- `src/processing-service/`: Background worker code and Dockerfile.
-- `charts/energy-app/`: Helm chart for full system deployment.
-
-## Deployment Instructions
-
-### 1. Build and Push Images
-```bash
-docker build -t noampaz26/energy-pipeline:ingestion-latest ./src/ingestion-api
-docker push noampaz26/energy-pipeline:ingestion-latest
-
-docker build -t noampaz26/energy-pipeline:worker-latest ./src/processing-service
-docker push noampaz26/energy-pipeline:worker-latest
-
-```
+## 🚀 Architecture Overview
+The system consists of the following components:
+* **Frontend UI:** A web dashboard for submitting energy metrics (Nginx).
+* **Ingestion API:** High-performance FastAPI service that receives data and pushes it to Redis.
+* **Redis Streams:** Acts as a message broker and temporary storage.
+* **Processing Worker:** A background service that consumes metrics, processes them, and maintains site history.
+* **KEDA Autoscaler:** Automatically scales the worker fleet based on the Redis Stream backlog.
 
 
 
-### 2. Deploy to Kubernetes via Helm
+## 🛠 Tech Stack
+* **Language:** Python (FastAPI, Redis-py)
+* **Orchestration:** Kubernetes (K8s)
+* **Package Management:** Helm
+* **Infrastructure:** Redis Streams, KEDA
+* **Containerization:** Docker
 
-```bash
-helm install energy-app ./charts/energy-app
-```
+## 📦 Installation & Setup
+
+### Prerequisites
+* Kubernetes Cluster (Minikube / Docker Desktop)
+* Helm 3+
+* Docker Hub account
+
+### Deployment
+1. **Clone the repository:**
+   ```bash
+   git clone <your-repo-url>
+   cd energy-monitoring-system
+Deploy using Helm:
+
+Bash
+helm upgrade --install energy-app ./helm-chart
+Expose the services:
+Open two terminals and run:
+
+Bash
+# Terminal 1: API
+kubectl port-forward svc/energy-app-ingestion-api 8000:80
+
+# Terminal 2: Frontend UI
+kubectl port-forward svc/energy-app-frontend-service 30080:80
+Access the Dashboard:
+Open your browser at http://localhost:30080

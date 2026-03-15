@@ -1,6 +1,7 @@
 import os
 import logging
 from fastapi import FastAPI, HTTPException, Response
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from redis import Redis
 
@@ -9,6 +10,14 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("ingestion_api")
 
 app = FastAPI(title="Energy Data Ingestion Service")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  
+    allow_credentials=True,
+    allow_methods=["*"],  
+    allow_headers=["*"],  
+)
 
 # Redis connection details from environment variables
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")

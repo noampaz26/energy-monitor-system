@@ -3,8 +3,17 @@ import time
 import threading
 from redis import Redis
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI() # Used for health probes and data retrieval
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 redis_host = os.getenv("REDIS_HOST", "localhost")
 r = Redis(host=redis_host, port=6379, decode_responses=True)
 
@@ -54,3 +63,8 @@ def get_site_readings(site_id: str):
 
 @app.get("/health")
 def health(): return {"status": "up"}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

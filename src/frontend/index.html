@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Monitoring System - Noam</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 400px; }
+        h1 { color: #1a73e8; font-size: 24px; text-align: center; margin-bottom: 25px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        button { width: 100%; padding: 12px; background-color: #1a73e8; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background 0.3s; margin-top: 10px; }
+        button:hover { background-color: #1557b0; }
+        #status { margin-top: 20px; text-align: center; font-weight: bold; min-height: 24px; }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Submit Energy Data</h1>
+        
+        <div class="form-group">
+            <label for="siteId">Site ID:</label>
+            <input type="text" id="siteId" placeholder="e.g., Ness-Ziona-Factory">
+        </div>
+
+        <div class="form-group">
+            <label for="reading">Power Reading (kW):</label>
+            <input type="number" id="reading" placeholder="e.g., 450.5">
+        </div>
+
+        <button onclick="sendData()">Send Data to API</button>
+        
+        <div id="status"></div>
+    </div>
+
+    <script>
+        // API Endpoint via Kubernetes port-forward
+        const API_URL = "http://localhost:8000"; 
+
+        async function sendData() {
+            const statusDiv = document.getElementById('status');
+            const siteId = document.getElementById('siteId').value;
+            const reading = document.getElementById('reading').value;
+
+            // Simple validation
+            if (!siteId || !reading) {
+                statusDiv.className = "error";
+                statusDiv.innerText = "Please fill in all fields";
+                return;
+            }
+
+            statusDiv.className = "";
+            statusDiv.innerText = "Sending...";
+
+            try {
+                const response = await fetch(`${API_URL}/readings`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        site_id: siteId,
+                        device_id: "frontend-ui",
+                        power_reading: parseFloat(reading),
+                        timestamp: new Date().toISOString()
+                    })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    statusDiv.className = "success";
+                    statusDiv.innerText = `✅ Success! Stream ID: ${result.stream_id}`;
+                    
+                    // Clear reading input after success
+                    document.getElementById('reading').value = '';
+                } else {
+                    const errorData = await response.json();
+                    statusDiv.className = "error";
+                    statusDiv.innerText = `❌ Error: ${errorData.detail || 'Submission failed'}`;
+                }
+            } catch (err) {
+                statusDiv.className = "error";
+                statusDiv.innerText = "❌ Connection Failed (Verify port-forward)";
+            }
+        }
+    </script>
+</body>
+</html>
