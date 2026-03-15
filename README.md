@@ -36,18 +36,22 @@ The system consists of the following components:
    ```bash
    git clone https://github.com/noampaz26/energy-monitor-system.git
    cd energy-monitoring-system
-Deploy using Helm:
 
-Bash
-.\helm.exe upgrade --install energy-app ./charts/energy-app
-Expose the services:
+2. **Deploy using Helm:**
+   ```bash
+   .\helm.exe upgrade --install energy-app ./charts/energy-app
+
+##  Expose the services:
 Open two terminals and run:
 
-Bash
-# Terminal 1: API
-kubectl port-forward service/ingestion-service 8000:80
+* **Terminal 1: API** 
+   ```bash
+   kubectl port-forward service/ingestion-service 8000:80   
 
-# Terminal 2: Frontend UI
-kubectl port-forward service/energy-app-frontend-service 30080:80
-Access the Dashboard:
+* **Terminal 2: Frontend UI** 
+   ```bash
+   kubectl port-forward service/energy-app-frontend-service 30080:80   
+
+
+# Access the Dashboard:
 Open your browser at http://localhost:30080
