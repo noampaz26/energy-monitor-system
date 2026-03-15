@@ -55,3 +55,21 @@ Open two terminals and run:
 
 # Access the Dashboard:
 Open your browser at http://localhost:30080
+
+## 🛠 Testing the API (Swagger UI)
+The Ingestion API comes with built-in interactive documentation. You can test the endpoints directly from your browser:
+
+1. **Establish a connection:**
+   ```bash
+   kubectl port-forward service/ingestion-service 8000:80
+
+# Access Swagger UI:   
+Navigate to http://localhost:8000/docs
+
+* **Try it out** 
+
+Locate the POST /readings endpoint.
+
+Click "Try it out", enter sample energy data, and click "Execute"
+
+Verify the 201 Created response.
