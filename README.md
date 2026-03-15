@@ -68,8 +68,8 @@ Navigate to http://localhost:8000/docs
 
 * **Try it out** 
 
-Locate the POST /readings endpoint.
+      Locate the POST /readings endpoint.
 
-Click "Try it out", enter sample energy data, and click "Execute"
+      Click "Try it out", enter sample energy data, and click "Execute"
 
-Verify the 201 Created response.
+      Verify the 201 Created response.
